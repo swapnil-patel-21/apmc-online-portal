@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../../static/adminResources/images/favicon.png">
+    <title>Vehicle Chart</title>
+    <!-- This page plugin CSS -->
+    <link href="../../static/adminResources/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../static/adminResources/css/style.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="adminResources/js/html5shiv.js"></script>
+    <script src="adminResources/js/respond.min.js"></script>
+<![endif]-->
+    <style>
+
+        #myImg {
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #myImg:hover {
+            opacity: 0.7;
+        }
+
+        /* The Modal (background) */
+        .mymodal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            margin-left: 15%;
+            width: 85%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+        }
+
+        /* Modal Content (image) */
+        .mymodal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        /* Caption of Modal Image */
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+
+        /* Add Animation */
+        .mymodal-content, #caption {
+            -webkit-animation-name: zoom;
+            -webkit-animation-duration: 0.6s;
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+
+        @-webkit-keyframes zoom {
+            from {
+                -webkit-transform: scale(0)
+            }
+            to {
+                -webkit-transform: scale(1)
+            }
+        }
+
+        @keyframes zoom {
+            from {
+                transform: scale(0)
+            }
+            to {
+                transform: scale(1)
+            }
+        }
+
+        /* The Close Button */
+        .close {
+            position: absolute;
+            top: 85px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #ff0a0a;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 100% Image Width on Smaller Screens */
+        @media only screen and (max-width: 700px) {
+            .mymodal-content {
+                width: 100%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+
+
+    {% include 'user/header.html' %}
+
+
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+
+
+    {% include 'user/menu.html' %}
+
+
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="page-breadcrumb">
+            <div class="row">
+                <div class="col-5 align-self-center">
+                    <h4 class="page-title">Vehicle Chart</h4>
+                    <div class="d-flex align-items-center">
+
+                    </div>
+                </div>
+                <div class="col-7 align-self-center">
+                    <div class="d-flex no-block justify-content-end align-items-center">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/">Home</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Vehicle Chart</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <!-- ============================================================== -->
+            <!-- File export -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="file_export" class="table table-striped table-bordered display">
+                                    <thead>
+                                    <tr>
+                                        <th>Vehicle Type</th>
+                                        <th>Vehicle Number</th>
+                                        <th>Vehicle Charge (Per km)</th>
+                                        <th>Vehicle Image</th>
+
+                                    </tr>
+                                    </thead>
+                                    {% for row in vehicle_vo_list %}
+                                        <tbody>
+                                        <tr>
+                                            <td>{{ row['vehicle_type'] }}</td>
+                                            <td>{{ row['vehicle_number'] }}</td>
+                                            <td>{{ row['vehicle_charge'] }}</td>
+
+                                            <td>
+                                                <img src="
+                                                        {{ row['vehicle_image_path'] }}{{ row['vehicle_image_name'] }}"
+                                                     style="border-radius: 5px; height: 50px;" onclick="fn(this)"
+                                                     id="myImg">
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Right sidebar -->
+            <!-- ============================================================== -->
+            <!-- .right-sidebar -->
+            <!-- ============================================================== -->
+            <!-- End Right sidebar -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+
+        {% include 'user/footer.html' %}
+
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+
+<!-- The Modal -->
+<div id="myModal" class="mymodal">
+    <span class="close" onclick="fn1()">&times;</span>
+    <img class="mymodal-content" id="img01">
+    <div id="caption"></div>
+</div>
+
+
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script src="../../static/adminResources/js/jquery.min.js"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="../../static/adminResources/js/popper.min.js"></script>
+<script src="../../static/adminResources/js/bootstrap.min.js"></script>
+<!-- apps -->
+<script src="../../static/adminResources/js/app.min.js"></script>
+<script src="../../static/adminResources/js/app.init.light-sidebar.js"></script>
+<script src="../../static/adminResources/js/app-style-switcher.js"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="../../static/adminResources/js/perfect-scrollbar.jquery.min.js"></script>
+<script src="../../static/adminResources/js/sparkline.js"></script>
+<!--Wave Effects -->
+<script src="../../static/adminResources/js/waves.js"></script>
+<!--Menu sidebar -->
+<script src="../../static/adminResources/js/sidebarmenu.js"></script>
+<!--Custom JavaScript -->
+<script src="../../static/adminResources/js/custom.min.js"></script>
+<!--This page plugins -->
+<script src="../../static/adminResources/js/datatables.min.js"></script>
+<!-- start - This is for export functionality only -->
+<script src="../../static/adminResources/js/dataTables.buttons.min.js"></script>
+<script src="../../static/adminResources/js/buttons.flash.min.js"></script>
+<script src="../../static/adminResources/js/jszip.min.js"></script>
+<script src="../../static/adminResources/js/pdfmake.min.js"></script>
+<script src="../../static/adminResources/js/vfs_fonts.js"></script>
+<script src="../../static/adminResources/js/buttons.html5.min.js"></script>
+<script src="../../static/adminResources/js/buttons.print.min.js"></script>
+<script src="../../static/adminResources/js/datatable-advanced.init.js"></script>
+
+<script>
+
+    var span = document.getElementsByClassName("close");
+    var modal = document.getElementById("myModal");
+
+    function fn(x) {
+        var img = document.getElementById("myImg");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+
+        modal.style.display = "block";
+        modalImg.src = x.src;
+        captionText.innerHTML = x.alt;
+    }
+
+    function fn1() {
+        modal.style.display = "none";
+    }
+
+</script>
+
+
+</body>
+
+</html>

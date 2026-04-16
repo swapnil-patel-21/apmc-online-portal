@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <style>
+        #description {
+            margin-top: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .rate {
+            float: left;
+            height: 46px;
+            padding: 0 10px;
+        }
+
+        .rate:not(:checked) > input {
+            position: absolute;
+            top: -9999px;
+        }
+
+        .rate:not(:checked) > label {
+            float: right;
+            width: 1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+        }
+
+        .rate:not(:checked) > label:before {
+            content: '★ ';
+        }
+
+        .rate > input:checked ~ label {
+            color: #ffc700;
+        }
+
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+            color: #deb217;
+        }
+
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+
+
+    </style>
+
+
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../../static/adminResources/images/favicon.png">
+    <title>Feedback</title>
+    <!-- Custom CSS -->
+    <link href="../../static/adminResources/css/style.min.css" rel="stylesheet">
+    <link href="../../static/adminResources/css/jquery.toast.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="adminResources/js/html5shiv.js"></script>
+    <script src="adminResources/js/respond.min.js"></script>
+
+<![endif]-->
+</head>
+
+<body>
+
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+
+
+    {% include 'user/header.html' %}
+
+
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+
+
+    {% include 'user/menu.html' %}
+
+
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header"
+                             style="background-image: linear-gradient(270deg, #ff3000, transparent);">
+                            <h4 class="m-0">Post Feedback</h4>
+                        </div>
+                        <div class="card-body">
+                            <form class="m-t-10" novalidate action="insert_feedback" method="post" onsubmit="return feedback()">
+
+
+                                <div class="rate mb-4">
+                                    <input type="radio" id="star5" name="rating" value="5"/><label for="star5"
+                                                                                                   title="text">5
+                                    stars</label>
+                                    <input type="radio" id="star4" name="rating" value="4"/><label for="star4"
+                                                                                                   title="text">4
+                                    stars</label>
+                                    <input type="radio" id="star3" name="rating" value="3"/><label for="star3"
+                                                                                                   title="text">3
+                                    stars</label>
+                                    <input type="radio" id="star2" name="rating" value="2"/><label for="star2"
+                                                                                                   title="text">2
+                                    stars</label>
+                                    <input type="radio" id="star1" name="rating" value="1"/><label for="star1"
+                                                                                                   title="text">1
+                                    star</label>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="controls">
+                                    <textarea placeholder="Enter About Your Feedback..." rows="5"
+                                              name="feedbackDescription"
+                                              id="feedbackDescription" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="text-xs-right">
+                                    <button type="submit" class="btn btn-info">Post Feedback</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header"
+                             style=" background-image: linear-gradient(270deg, #ff3000, transparent);">
+                            <h4 class="m-0">View Feedback</h4>
+                        </div>
+                        {% if feedback_vo_list %}
+                            {% for feedback_vo_data in feedback_vo_list %}
+                                <div class="card-body">
+                                    <div class="d-flex flex-row comment-row">
+                                        <div class="p-2">
+                                            <img src="../../static/adminResources/images/2.jpg" alt="user" width="50"
+                                                 class="rounded-circle">
+                                        </div>
+                                        <div class="comment-text active w-100">
+                                            <h6 class="font-medium">{{ feedback_vo_data[0]['login_username'] }}
+                                                <span class="text-muted float-right">
+                                                {% for rating_star in range(feedback_vo_data[1]['feedback_rating']) %}
+                                                    <i class="mdi mdi-star"></i>
+                                                {% endfor %}
+                                            </span>
+                                            </h6>
+                                            <span class="m-b-15 d-block">
+                                            {{ feedback_vo_data[1]['feedback_description'] }}
+                                        </span>
+                                            <div class="comment-footer">
+                                                <span class="text-muted float-right">{{ feedback_vo_data[1]['feedback_datetime'] }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Right sidebar -->
+            <!-- ============================================================== -->
+            <!-- .right-sidebar -->
+            <!-- ============================================================== -->
+            <!-- End Right sidebar -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+
+        {% include 'user/footer.html' %}
+
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+
+
+<div class="chat-windows"></div>
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script src="../../static/adminResources/js/jquery.min.js"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="../../static/adminResources/js/popper.min.js"></script>
+<script src="../../static/adminResources/js/bootstrap.min.js"></script>
+<!-- apps -->
+<script src="../../static/adminResources/js/app.min.js"></script>
+<script src="../../static/adminResources/js/app.init.light-sidebar.js"></script>
+<script src="../../static/adminResources/js/app-style-switcher.js"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="../../static/adminResources/js/perfect-scrollbar.jquery.min.js"></script>
+<script src="../../static/adminResources/js/sparkline.js"></script>
+<!--Wave Effects -->
+<script src="../../static/adminResources/js/waves.js"></script>
+<!--Menu sidebar -->
+<script src="../../static/adminResources/js/sidebarmenu.js"></script>
+<!--Custom JavaScript -->
+<script src="../../static/adminResources/js/custom.min.js"></script>
+<script src="../../static/adminResources/js/validation.js"></script>
+
+<script src="../../static/adminResources/js/customValidation.js"></script>
+<script src="../../static/adminResources/js/jquery.toast.min.js"></script>
+<script src="../../static/adminResources/js/toaster.js"></script>
+
+<script>
+    !function (window, document, $) {
+        "use strict";
+        $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
+    }(window, document, jQuery);
+</script>
+</body>
+
+</html>

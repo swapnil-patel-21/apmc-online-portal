@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../../static/adminResources/images/favicon.png">
+    <title>Register</title>
+    <!-- Custom CSS -->
+    <link href="../../static/adminResources/css/style.min.css" rel="stylesheet">
+    <link href="../../static/adminResources/css/jquery.toast.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="adminResources/js/html5shiv.js"></script>
+    <script src="adminResources/js/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+<div class="main-wrapper" style="background: url('../../static/adminResources/images/bg6.jpg'); background-size: cover; background-repeat: no-repeat;">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Login box.scss -->
+    <!-- ============================================================== -->
+    <div class="auth-wrapper d-flex no-block justify-content-center align-items-center"
+         style="adminResources/images/auth-bg.jpg) no-repeat center center;">
+        <div class="auth-box" style="max-width: 650px;">
+            <div>
+                <div class="logo">
+                    <span class="db"><img src="../../static/adminResources/images/logo.png" alt="logo"/></span>
+                    <h3 class="font-medium m-b-20 mt-2">Sign Up to User</h3>
+                </div>
+                <!-- Form -->
+                <div class="row">
+                    <div class="col-12">
+                        <form class="form-horizontal m-t-20" action="submit_register_data" method="post" onsubmit="return register()">
+                            <div class="form-group row ">
+                                <div class="col-6 ">
+                                    <input class="form-control form-control-lg" type="text" name="firstName" id="firstName"
+                                           placeholder="First Name">
+                                </div>
+                                <div class="col-6 ">
+                                    <input class="form-control form-control-lg" type="text" name="lastName" id="lastName"
+                                           placeholder="Last Name">
+                                </div>
+                            </div>
+
+                            <div class="form-group raw">
+                                <div class="controls">
+                                    <select name="gender" id="gender" class="form-control form-control-lg">
+                                        <option value="None" style="display: none">Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Others">Others</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group raw">
+                                <div class="input-group">
+                                    <input type="tel" name="contactNumber" id="contactNumber" pattern="[0-9]{10}" class="form-control form-control-lg" placeholder="Contact Number">
+                                </div>
+                            </div>
+                            <div class="form-group raw">
+                                <div class="controls">
+                                    <textarea name="address" id="address" class="form-control form-control-lg"
+                                              placeholder="Address"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <input type="email" name="userName" id="userName" class="form-control form-control-lg" placeholder="User Name"></div>
+                            </div>
+
+                            <div class="form-group text-center ">
+                                <div class="col-xs-12 p-b-20 ">
+                                    <button class="btn btn-block btn-lg btn-info " type="submit ">SIGN UP</button>
+                                </div>
+                            </div>
+                            <div class="form-group m-b-0 m-t-10 ">
+                                <div class="col-sm-12 text-center ">
+                                    Already have an account? <a href="/"
+                                                                class="text-info m-l-5 "><b>Sign In</b></a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Login box.scss -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper scss in scafholding.scss -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper scss in scafholding.scss -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Right Sidebar -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Right Sidebar -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- All Required js -->
+<!-- ============================================================== -->
+<script src="../../static/adminResources/js/jquery.min.js "></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="../../static/adminResources/js/popper.min.js "></script>
+<script src="../../static/adminResources/js/bootstrap.min.js "></script>
+
+
+<script src="../../static/adminResources/js/toaster.js "></script>
+<script src="../../static/adminResources/js/jquery.toast.min.js "></script>
+<script src="../../static/adminResources/js/customValidation.js "></script>
+
+<!-- ============================================================== -->
+<!-- This page plugin js -->
+<!-- ============================================================== -->
+<script>
+    $('[data-toggle="tooltip "]').tooltip();
+    $(".preloader ").fadeOut();
+</script>
+</body>
+
+</html>
