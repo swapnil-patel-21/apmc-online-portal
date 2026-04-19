@@ -193,7 +193,7 @@ def approve_reject_transportrequest():
                 msg_details = "Your Transport Request is Rejected"
                 transportrequest_vo.transportrequest_status = "Reject"
 
-            msg['Subject'] = "APMC Online Portal"
+            msg['Subject'] = "APMC Online Portal - Transport Request Update"
             msg.attach(MIMEText(msg_details, 'plain'))
 
             server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))

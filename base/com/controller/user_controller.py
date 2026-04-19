@@ -1,4 +1,5 @@
 import random
+import os
 import smtplib
 import string
 from email.mime.multipart import MIMEMultipart
@@ -42,20 +43,20 @@ def user_register_submit_data():
         login_password = ''.join((random.choice(string.ascii_letters + string.digits)) for x in range(8))
         print("in user_insert_user login_password>>>>>>>>>", login_password)
 
-        # sender = os.getenv("EMAIL_USER")
-        # receiver = login_username
-        # msg = MIMEMultipart()
-        # msg['From'] = sender
-        # msg['To'] = receiver
-        # msg['Subject'] = "PYTHON PASSWORD"
-        # msg.attach(MIMEText(login_password, 'plain'))
+        sender = os.getenv("EMAIL_USER")
+        receiver = login_username
+        msg = MIMEMultipart()
+        msg['From'] = sender
+        msg['To'] = receiver
+        msg['Subject'] = "APMC Online Portal - Login Credentials"
+        msg.attach(MIMEText(login_password, 'plain'))
 
-        # server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))
-        # server.starttls()
-        # server.login(sender, "")
-        # text = msg.as_string()
-        # server.sendmail(sender, receiver, text)
-        # server.quit()
+        server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))
+        server.starttls()
+        server.login(sender, "")
+        text = msg.as_string()
+        server.sendmail(sender, receiver, text)
+        server.quit()
 
         login_secretkey = ''.join((random.choice(string.ascii_letters + string.digits)) for x in range(32))
         print("in user_insert_user login_secretkey>>>>>>>", login_secretkey)
