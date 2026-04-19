@@ -44,6 +44,7 @@ def user_register_submit_data():
         print("in user_insert_user login_password>>>>>>>>>", login_password)
 
         sender = os.getenv("EMAIL_USER")
+        app_password = os.getenv("EMAIL_PASS")
         receiver = login_username
         msg = MIMEMultipart()
         msg['From'] = sender
@@ -53,7 +54,7 @@ def user_register_submit_data():
 
         server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))
         server.starttls()
-        server.login(sender, "")
+        server.login(sender, app_password)
         text = msg.as_string()
         server.sendmail(sender, receiver, text)
         server.quit()
