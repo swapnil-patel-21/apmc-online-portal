@@ -1,5 +1,4 @@
 from base import app, db
-from models import *
 
 # ✅ This will run when app starts (even on Render)
 with app.app_context():
