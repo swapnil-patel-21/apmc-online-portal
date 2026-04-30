@@ -161,6 +161,8 @@ def user_view_book_request():
     try:
         if admin_login_session() == 'user':
 
+            print(">>>>>>>>>>>>>>> Inside if")
+
             booking_dao = BookingDAO()
             booking_vo = BookingVO()
             login_vo = LoginVO()

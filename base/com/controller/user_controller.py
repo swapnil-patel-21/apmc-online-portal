@@ -4,6 +4,7 @@ import smtplib
 import string
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email_validator import validate_email, EmailNotValidError
 
 from flask import *
 
@@ -39,9 +40,34 @@ def user_register_submit_data():
         user_address = request.form.get('address')
         user_contactnumber = request.form.get('contactNumber')
         login_username = request.form.get('userName')
+        mail_name = f"{user_firstname} {user_lastname}"
+
+        try:
+            valid = validate_email(login_username)
+            login_username = valid.email
+        except EmailNotValidError as e:
+            print("user_register_submit_data route exception occured>>>>>>>>>>", e)
 
         login_password = ''.join((random.choice(string.ascii_letters + string.digits)) for x in range(8))
-        print("in user_insert_user login_password>>>>>>>>>", login_password)
+        # print("in user_insert_user login_password>>>>>>>>>", login_password)
+
+        mail_content = f'''
+                Dear {mail_name},
+
+                Welcome to the APMC Online Portal.
+
+                Your account has been successfully created. Please find your login credentials below:
+
+                Username: {login_username}
+                Password: {login_password}
+
+                You can access the portal here: {os.getenv("APPLICATION_URL")}
+
+                If you have any questions or need assistance, please contact our support team.
+
+                Regards,
+                APMC Online Portal Team
+        '''
 
         sender = os.getenv("EMAIL_USER")
         app_password = os.getenv("EMAIL_PASS")
@@ -50,7 +76,7 @@ def user_register_submit_data():
         msg['From'] = sender
         msg['To'] = receiver
         msg['Subject'] = "APMC Online Portal - Login Credentials"
-        msg.attach(MIMEText(login_password, 'plain'))
+        msg.attach(MIMEText(mail_content, 'plain'))
 
         server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))
         server.starttls()

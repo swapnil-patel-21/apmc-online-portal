@@ -1,154 +1,334 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- Favicon icon -->
+    <title>APMC Online Portal - My Dashboard</title>
     <link rel="icon" type="image/png" sizes="16x16" href="../../static/adminResources/images/favicon.png">
-    <title>APMC Online Portal</title>
-    <!-- Custom CSS -->
-    <link href="../../static/adminResources/css/c3.min.css" rel="stylesheet">
-    <link href="../../static/adminResources/css/css-chart.css" rel="stylesheet">
-    <link href="../../static/adminResources/css/jquery-jvectormap-2.0.2.css" rel="stylesheet"/>
-    <link href="../../static/adminResources/css/dataTables.bootstrap4.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <link href="../../static/adminResources/css/style.min.css" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="adminResources/js/html5shiv.js"></script>
-    <script src="adminResources/js/respond.min.js"></script>
-<![endif]-->
+    <style>
+        .dash-card { border-radius: 8px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,.08); transition: transform .2s; }
+        .dash-card:hover { transform: translateY(-3px); }
+        .stat-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        .stat-val { font-size: 1.9rem; font-weight: 700; line-height: 1; }
+        .stat-lbl { font-size: .78rem; color: #8898aa; font-weight: 500; margin-top: 4px; }
+        .badge-pending  { background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 700; }
+        .badge-approved { background: #d1fae5; color: #065f46; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 700; }
+        .badge-rejected { background: #fee2e2; color: #991b1b; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 700; }
+        .badge-open     { background: #fee2e2; color: #991b1b; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 700; }
+        .badge-resolved { background: #d1fae5; color: #065f46; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 700; }
+        .badge-cancelled{ background: #f3f4f6; color: #6b7280; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 700; }
+        .sk { background: linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%); background-size: 200% 100%; animation: sk 1.4s infinite; border-radius: 4px; height: 14px; }
+        @keyframes sk { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        .price-row { display: flex; align-items: center; padding: 9px 0; border-bottom: 1px solid #f1f3f5; }
+        .price-row:last-child { border-bottom: none; }
+        .slot-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+        .slot-item { border: 1.5px solid #e9ecef; border-radius: 8px; padding: 10px 8px; text-align: center; }
+        .slot-item.full { opacity: .5; }
+        .slot-time { font-size: .82rem; font-weight: 700; }
+        .slot-date { font-size: .65rem; color: #adb5bd; margin-top: 2px; }
+        .slot-avail { font-size: .65rem; font-weight: 700; margin-top: 4px; }
+        .avail-green { color: #059669; } .avail-warn { color: #d97706; } .avail-red { color: #dc2626; }
+        .prof-row { display: flex; align-items: center; padding: 9px 0; border-bottom: 1px solid #f1f3f5; }
+        .prof-row:last-child { border-bottom: none; }
+        .prof-lbl { font-size: .72rem; color: #adb5bd; width: 90px; flex-shrink: 0; }
+        .prof-val { font-size: .82rem; font-weight: 500; }
+    </style>
 </head>
-
 <body>
-
-<!-- ============================================================== -->
-<!-- Main wrapper - style you can find in pages.scss -->
-<!-- ============================================================== -->
 <div id="main-wrapper">
-    <!-- ============================================================== -->
-    <!-- Topbar header - style you can find in pages.scss -->
-    <!-- ============================================================== -->
-
 
     {% include 'user/header.html' %}
-
-
-    <!-- ============================================================== -->
-    <!-- End Topbar header -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- Left Sidebar - style you can find in sidebar.scss  -->
-    <!-- ============================================================== -->
-
-
     {% include 'user/menu.html' %}
 
-
-    <!-- ============================================================== -->
-    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- Page wrapper  -->
-    <!-- ============================================================== -->
     <div class="page-wrapper">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-
-        <!-- ============================================================== -->
-        <!-- End Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Container fluid  -->
-        <!-- ============================================================== -->
-        <div class="container-fluid">
-
+        <div class="page-breadcrumb">
             <div class="row">
-                <div class="col-lg-6">
-                    <img src="../../static/adminResources/images/1.jpg" style="border-radius: 10px; height: 100%; width: 100%">
+                <div class="col-5 align-self-center">
+                    <h4 class="page-title">My Dashboard</h4>
                 </div>
-                <div class="col-lg-6">
-                    <h2 class="text-muted text-center">APMC Online Portal</h2>
-                    <p class="text-muted text-justify" style="line-height: 1.7em; font-size: 20px">APMC Online Portal is a portal which takes information of different types of commodities details
-                        from users and give an option to booking a slot as per their convenience. This process reduces
-                        the time. It also reduces the man power requirement. A portal is used to analyze price trends,
-                        arrival and trading activities. Users can also check their past history. It helps the farmer to
-                        sell their product at high price. A portal will provide transparent and secure platform for
-                        farmers.
-                    </p>
+                <div class="col-7 align-self-center">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-end">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Container fluid  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- footer -->
-        <!-- ============================================================== -->
 
+        <div class="container-fluid">
+
+            <!-- Welcome Banner -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card dash-card" style="background:linear-gradient(135deg,#eef4ff,#f0fdf8);border:1px solid #e0e7ff">
+                        <div class="card-body">
+                            <h4 class="mb-1">Welcome back, <span id="heroName" class="text-primary">…</span> 👋</h4>
+                            <p class="text-muted mb-0" style="font-size:.85rem">Here's a summary of your activity on the APMC portal.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAT CARDS -->
+            <div class="row mb-4">
+                <div class="col-sm-6 col-lg-3 mb-3">
+                    <div class="card dash-card h-100">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <div class="stat-icon bg-success bg-opacity-10 text-success">🌱</div>
+                            <div>
+                                <div class="stat-val" id="sv-crop"><div class="sk" style="width:36px;height:24px"></div></div>
+                                <div class="stat-lbl">Crop Requests</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3 mb-3">
+                    <div class="card dash-card h-100">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <div class="stat-icon bg-warning bg-opacity-10 text-warning">🚛</div>
+                            <div>
+                                <div class="stat-val" id="sv-transport"><div class="sk" style="width:36px;height:24px"></div></div>
+                                <div class="stat-lbl">Transport Requests</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3 mb-3">
+                    <div class="card dash-card h-100">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <div class="stat-icon bg-primary bg-opacity-10 text-primary">📅</div>
+                            <div>
+                                <div class="stat-val" id="sv-bookings"><div class="sk" style="width:36px;height:24px"></div></div>
+                                <div class="stat-lbl">Bookings</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3 mb-3">
+                    <div class="card dash-card h-100">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <div class="stat-icon bg-danger bg-opacity-10 text-danger">💬</div>
+                            <div>
+                                <div class="stat-val" id="sv-complaints"><div class="sk" style="width:36px;height:24px"></div></div>
+                                <div class="stat-lbl">Complaints</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CROP REQUESTS + PRICES -->
+            <div class="row mb-4">
+                <div class="col-lg-8 mb-3">
+                    <div class="card dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">🌱 My Crop Requests</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-borderless">
+                                    <thead class="thead-light"><tr><th>Crop</th><th>Type</th><th>Qty (kg)</th><th>Date</th><th>Status</th></tr></thead>
+                                    <tbody id="cropTbody"><tr><td colspan="5"><div class="sk"></div></td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <div class="card dash-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">💰 Market Prices</h5>
+                            <div id="priceList"><div class="sk mb-2"></div><div class="sk mb-2"></div><div class="sk"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRANSPORT + BOOKINGS + COMPLAINTS -->
+            <div class="row mb-4">
+                <div class="col-lg-4 mb-3">
+                    <div class="card dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">🚛 My Transport</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover table-borderless">
+                                    <thead class="thead-light"><tr><th>Vehicle</th><th>Crop</th><th>Status</th></tr></thead>
+                                    <tbody id="transportTbody"><tr><td colspan="3"><div class="sk"></div></td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <div class="card dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">📅 My Bookings</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover table-borderless">
+                                    <thead class="thead-light"><tr><th>Slot</th><th>Date</th><th>Status</th></tr></thead>
+                                    <tbody id="bookingTbody"><tr><td colspan="3"><div class="sk"></div></td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <div class="card dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">💬 My Complaints</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover table-borderless">
+                                    <thead class="thead-light"><tr><th>Subject</th><th>Status</th><th>Date</th></tr></thead>
+                                    <tbody id="complainTbody"><tr><td colspan="3"><div class="sk"></div></td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLOTS + PROFILE -->
+            <div class="row mb-4">
+                <div class="col-lg-7 mb-3">
+                    <div class="card dash-card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">📅 Available Time Slots</h5>
+                            <div class="slot-grid" id="slotGrid">
+                                <div class="slot-item"><div class="sk" style="height:12px;margin-bottom:5px"></div><div class="sk" style="width:60%;height:9px"></div></div>
+                                <div class="slot-item"><div class="sk" style="height:12px;margin-bottom:5px"></div><div class="sk" style="width:60%;height:9px"></div></div>
+                                <div class="slot-item"><div class="sk" style="height:12px;margin-bottom:5px"></div><div class="sk" style="width:60%;height:9px"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 mb-3">
+                    <div class="card dash-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">👤 My Profile</h5>
+                            <div id="profileCard">
+                                <div class="prof-row"><div class="prof-lbl">Name</div><div class="prof-val sk" style="height:12px;width:120px"></div></div>
+                                <div class="prof-row"><div class="prof-lbl">Gender</div><div class="prof-val sk" style="height:12px;width:80px"></div></div>
+                                <div class="prof-row"><div class="prof-lbl">Contact</div><div class="prof-val sk" style="height:12px;width:110px"></div></div>
+                                <div class="prof-row"><div class="prof-lbl">Address</div><div class="prof-val sk" style="height:12px;width:150px"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- container-fluid -->
 
         {% include 'user/footer.html' %}
-
-
-        <!-- ============================================================== -->
-        <!-- End footer -->
-        <!-- ============================================================== -->
     </div>
-    <!-- ============================================================== -->
-    <!-- End Page wrapper  -->
-    <!-- ============================================================== -->
 </div>
-<!-- ============================================================== -->
-<!-- End Wrapper -->
-<!-- ============================================================== -->
-<!-- ============================================================== -->
 
-
-<div class="chat-windows"></div>
-<!-- ============================================================== -->
-<!-- All Jquery -->
-<!-- ============================================================== -->
 <script src="../../static/adminResources/js/jquery.min.js"></script>
-<!-- Bootstrap tether Core JavaScript -->
 <script src="../../static/adminResources/js/popper.min.js"></script>
 <script src="../../static/adminResources/js/bootstrap.min.js"></script>
-<!-- apps -->
 <script src="../../static/adminResources/js/app.min.js"></script>
 <script src="../../static/adminResources/js/app.init.light-sidebar.js"></script>
-<!-- Theme settings -->
-<script src="../../static/adminResources/js/app-style-switcher.js"></script>
-<!-- slimscrollbar scrollbar JavaScript -->
 <script src="../../static/adminResources/js/perfect-scrollbar.jquery.min.js"></script>
-<script src="../../static/adminResources/js/sparkline.js"></script>
-<!--Wave Effects -->
 <script src="../../static/adminResources/js/waves.js"></script>
-<!--Menu sidebar -->
 <script src="../../static/adminResources/js/sidebarmenu.js"></script>
-<!--Custom JavaScript -->
 <script src="../../static/adminResources/js/custom.min.js"></script>
-<!--This page JavaScript -->
-<script src="../../static/adminResources/js/d3.min.js"></script>
-<script src="../../static/adminResources/js/c3.min.js"></script>
-<script src="../../static/adminResources/js/chart.min.js"></script>
-<script src="../../static/adminResources/js/gauge.min.js"></script>
-<script src="../../static/adminResources/js/excanvas.min.js"></script>
-<script src="../../static/adminResources/js/jquery.flot.js"></script>
-<script src="../../static/adminResources/js/jquery.flot.tooltip.min.js"></script>
-<script src="../../static/adminResources/js/jquery-jvectormap-2.0.2.min.js"></script>
-<script src="../../static/adminResources/js/jquery-jvectormap-world-mill-en.js"></script>
-<script src="../../static/adminResources/js/datatables.min.js"></script>
-<script src="../../static/adminResources/js/dataTables.buttons.min.js"></script>
-<script src="../../static/adminResources/js/jszip.min.js"></script>
-<script src="../../static/adminResources/js/buttons.html5.min.js"></script>
-<script src="../../static/adminResources/js/buttons.print.min.js"></script>
-<script src="../../static/adminResources/js/dashboard2.js"></script>
-</body>
+<script>
+function badge(s){ return `<span class="badge-${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>`; }
+async function load(url){ const r=await fetch(url); const d=await r.json(); return d.data; }
+function countUp(el,n){ let i=0,step=Math.max(1,Math.ceil(n/25)); const t=setInterval(()=>{i=Math.min(i+step,n);el.textContent=i;if(i>=n)clearInterval(t);},30); }
 
+async function loadProfile(){
+    const d = await load('/user/dashboard/profile');
+    const name = d.firstname ? `${d.firstname} ${d.lastname}` : '—';
+    document.getElementById('heroName').textContent = d.firstname || 'User';
+    document.getElementById('profileCard').innerHTML = `
+        <div class="prof-row"><div class="prof-lbl">Name</div><div class="prof-val">${name}</div></div>
+        <div class="prof-row"><div class="prof-lbl">Gender</div><div class="prof-val">${d.gender||'—'}</div></div>
+        <div class="prof-row"><div class="prof-lbl">Contact</div><div class="prof-val">${d.contact||'—'}</div></div>
+        <div class="prof-row"><div class="prof-lbl">Address</div><div class="prof-val">${d.address||'—'}</div></div>`;
+}
+
+async function loadStats(){
+    const d = await load('/user/dashboard/stats');
+    countUp(document.getElementById('sv-crop'), d.crop_requests);
+    countUp(document.getElementById('sv-transport'), d.transport_reqs);
+    countUp(document.getElementById('sv-bookings'), d.bookings);
+    countUp(document.getElementById('sv-complaints'), d.complaints);
+}
+
+async function loadCropRequests(){
+    const rows = await load('/user/dashboard/crop_requests');
+    document.getElementById('cropTbody').innerHTML = rows.length
+        ? rows.map(r=>`<tr>
+            <td><strong>${r.crop_name}</strong></td>
+            <td><small class="text-muted">${r.crop_type}</small></td>
+            <td>${r.quantity}</td>
+            <td><small class="text-muted">${r.datetime}</small></td>
+            <td>${badge(r.status)}</td>
+          </tr>`).join('')
+        : '<tr><td colspan="5" class="text-center text-muted py-3">No requests yet</td></tr>';
+}
+
+async function loadTransport(){
+    const rows = await load('/user/dashboard/transport_requests');
+    document.getElementById('transportTbody').innerHTML = rows.length
+        ? rows.map(r=>`<tr>
+            <td><small>${r.vehicle_number}</small></td>
+            <td>${r.vehicle_type}</td>
+            <td>${badge(r.status)}</td>
+          </tr>`).join('')
+        : '<tr><td colspan="3" class="text-center text-muted py-3">None</td></tr>';
+}
+
+async function loadBookings(){
+    const rows = await load('/user/dashboard/bookings');
+    document.getElementById('bookingTbody').innerHTML = rows.length
+        ? rows.map(b=>`<tr>
+            <td><strong>${b.slot}</strong></td>
+            <td><small class="text-muted">${b.date}</small></td>
+            <td>${badge(b.status)}</td>
+          </tr>`).join('')
+        : '<tr><td colspan="3" class="text-center text-muted py-3">No bookings</td></tr>';
+}
+
+async function loadComplaints(){
+    const rows = await load('/user/dashboard/complaints');
+    document.getElementById('complainTbody').innerHTML = rows.length
+        ? rows.map(c=>`<tr>
+            <td>${c.subject}</td>
+            <td>${badge(c.status)}</td>
+            <td><small class="text-muted">${c.datetime}</small></td>
+          </tr>`).join('')
+        : '<tr><td colspan="3" class="text-center text-muted py-3">No complaints</td></tr>';
+}
+
+async function loadPrices(){
+    const rows = await load('/user/dashboard/price_chart');
+    document.getElementById('priceList').innerHTML = rows.length
+        ? rows.map(p=>`<div class="price-row">
+            <div class="flex-grow-1"><strong>${p.crop_name}</strong><br><small class="text-muted">${p.date}</small></div>
+            <strong>₹${p.price}/q</strong>
+          </div>`).join('')
+        : '<p class="text-muted small">No prices</p>';
+}
+
+async function loadSlots(){
+    const rows = await load('/user/dashboard/slots');
+    document.getElementById('slotGrid').innerHTML = rows.length
+        ? rows.map(s=>{
+            const full = s.available === 0;
+            const cls = full ? 'avail-red' : s.available <= 3 ? 'avail-warn' : 'avail-green';
+            return `<div class="slot-item ${full?'full':''}">
+                <div class="slot-time">${s.type}</div>
+                <div class="slot-date">${s.date}</div>
+                <div class="slot-avail ${cls}">${full ? 'Full' : s.available+' left'}</div>
+              </div>`;
+          }).join('')
+        : '<p class="text-muted small" style="grid-column:1/-1">No upcoming slots</p>';
+}
+
+Promise.all([loadProfile(), loadStats(), loadCropRequests(), loadTransport(), loadBookings(), loadComplaints(), loadPrices(), loadSlots()]);
+</script>
+</body>
 </html>

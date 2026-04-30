@@ -72,7 +72,7 @@ def user_ajax_vehicle():
             vehicle_vo = VehicleVO()
             vehicle_dao = VehicleDAO()
 
-            vehicle_type = request.args.get('vehicleType')
+            vehicle_type = (request.args.get('vehicleType').lower())
             print("subcategory_category_id>>>>>>>>>>>>>", vehicle_type)
             vehicle_vo.vehicle_type = vehicle_type
             vehicle_vo_list = vehicle_dao.view_ajax_vehicle(vehicle_vo)

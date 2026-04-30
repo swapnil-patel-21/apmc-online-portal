@@ -95,7 +95,7 @@
                             {% for value in crop_vo_list %}
                                 <div class="form-group">
                                     <div class="controls">
-                                        <select name="cropType" id="" required class="form-control">
+                                        <!-- <select name="cropType" id="" required class="form-control">
                                             <option selected disabled
                                                     style="display: none">{{ value['crop_type'] }}</option>
                                             <option value="Food Grains">Food Grains</option>
@@ -104,6 +104,14 @@
                                             <option value="Vegetables">Vegetables</option>
                                             <option value="Spices">Spices</option>
                                             <option value="Misc">Misc</option>
+                                        </select> -->
+                                        <select name="cropType" class="form-control" required>
+                                            <option value="Food Grains" {{ 'selected' if value['crop_type'] == 'Food Grains' else '' }}>Food Grains</option>
+                                            <option value="Oil Seeds" {{ 'selected' if value['crop_type'] == 'Oil Seeds' else '' }}>Oil Seeds</option>
+                                            <option value="Fruits" {{ 'selected' if value['crop_type'] == 'Fruits' else '' }}>Fruits</option>
+                                            <option value="Vegetables" {{ 'selected' if value['crop_type'] == 'Vegetables' else '' }}>Vegetables</option>
+                                            <option value="Spices" {{ 'selected' if value['crop_type'] == 'Spices' else '' }}>Spices</option>
+                                            <option value="Misc" {{ 'selected' if value['crop_type'] == 'Misc' else '' }}>Misc</option>
                                         </select>
                                     </div>
                                 </div>
