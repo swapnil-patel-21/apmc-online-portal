@@ -12,9 +12,11 @@ from base.com.dao.crop_dao import CropDAO
 from base.com.dao.cropname_dao import CropNameDAO
 from base.com.dao.croprequest_dao import CropRequestDAO
 from base.com.dao.login_dao import LoginDAO
+from base.com.dao.user_dao import UserDAO
 from base.com.vo.cropname_vo import CropNameVO
 from base.com.vo.croprequest_vo import CropRequestVO
 from base.com.vo.login_vo import LoginVO
+from base.com.vo.user_vo import UserVO
 
 
 @app.route('/admin/view_sell_request', methods=['GET'])
@@ -44,6 +46,8 @@ def admin_approve_reject_request():
             croprequest_dao = CropRequestDAO()
             login_dao = LoginDAO()
             login_vo = LoginVO()
+            user_dao = UserDAO()
+            user_vo = UserVO()
 
             croprequest_id = request.args.get("croprequestId")
             croprequest_vo.croprequest_id = croprequest_id
@@ -54,6 +58,10 @@ def admin_approve_reject_request():
                     login_username = login_dao.find_login_username(login_vo)
                     break
 
+            croprequest_vo_list_mail_details = croprequest_dao.user_croprequest_mail_details(croprequest_vo)
+            user_vo.user_login_id = croprequest_vo_list_mail_details[3]
+            login_user_fname_lname = user_dao.find_login_user_fname_lname(user_vo)
+
             sender = os.getenv("EMAIL_USER")
             app_password = os.getenv("EMAIL_PASS")
             receiver = login_username
@@ -63,13 +71,41 @@ def admin_approve_reject_request():
 
             status = request.args.get("status")
             if status == "Approve":
-                msg_details = "Your Crop Sell Request is Approved"
+                msg_details = f'''
+                    Dear {login_user_fname_lname},
+
+                    We are pleased to inform you that your Sell Request has been approved ✔.
+
+                    Request Details:
+                    Request ID: {croprequest_vo_list_mail_details[0]}
+                    Crop Name: {croprequest_vo_list_mail_details[2]}
+                    Quantity: {croprequest_vo_list_mail_details[1]}
+
+                    You may now proceed with the next steps through the portal.
+
+                    Regards,
+                    APMC Online Portal Team
+                '''
                 croprequest_vo.croprequest_status = "Approve"
             elif status == "Reject":
-                msg_details = "Your Crop Sell Request is Rejected"
+                msg_details = f'''
+                    Dear {login_user_fname_lname},
+
+                    We regret to inform you that your Crop Sell Request has been rejected ✖.
+
+                    Request Details:
+                    Request ID: {croprequest_vo_list_mail_details[0]}
+                    Crop Name: {croprequest_vo_list_mail_details[2]}
+                    Quantity: {croprequest_vo_list_mail_details[1]}
+
+                    Please review the details and feel free to submit a new request.
+
+                    Regards,
+                    APMC Online Portal Team
+                '''
                 croprequest_vo.croprequest_status = "Reject"
 
-            msg['Subject'] = "APMC Online Portal"
+            msg['Subject'] = "APMC Online Portal - Sell Request Update"
             msg.attach(MIMEText(msg_details, 'plain'))
 
             server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))

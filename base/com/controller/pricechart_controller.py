@@ -72,7 +72,7 @@ def admin_submit_add_price():
 
             print("Done")
 
-            return redirect('admin/view_price')
+            return redirect('/admin/view_price')
         else:
             print("Not admin role")
     except Exception as ex:
@@ -118,7 +118,7 @@ def admin_edit_price():
         if admin_login_session() == 'admin':
             price_chart_vo = PriceChartVO()
             price_chart_dao = PriceChartDAO()
-            crop_dao = CropDAO()
+            # crop_dao = CropDAO()
 
             price_chart_id = request.args.get('priceChartId')
             price_chart_vo.price_chart_id = price_chart_id

@@ -27,7 +27,7 @@ class PriceChartDAO:
         db.session.commit()
 
     def edit_price(self, price_chart_vo):
-        price_chart_vo_list = db.session.query(PriceChartVO, CropNameVO, CropVO)\
+        price_chart_vo_list = db.session.query(PriceChartVO, CropNameVO)\
             .filter_by(price_chart_id=price_chart_vo.price_chart_id) \
             .join(CropNameVO, PriceChartVO.price_chart_crop_id == CropNameVO.crop_name_id) \
             .all()

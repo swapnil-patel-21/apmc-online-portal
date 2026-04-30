@@ -7,6 +7,7 @@ from base.com.vo.booking_vo import BookingVO
 from base.com.vo.timeslot_vo import TimeSlotVO
 from base.com.vo.pricechart_vo import PriceChartVO
 from base.com.vo.vehicle_vo import VehicleVO
+from sqlalchemy import cast, Integer
 
 
 class CropRequestDAO:
@@ -41,10 +42,25 @@ class CropRequestDAO:
     def user_order_history(self, croprequest_vo):
         croprequest_vo_list = db.session.query(CropRequestVO, BookingVO, CropNameVO, CropVO, TimeSlotVO, PriceChartVO) \
             .filter_by(croprequest_login_id=croprequest_vo.croprequest_login_id) \
-            .join(BookingVO, BookingVO.booking_name_id == CropRequestVO.croprequest_crop_name) \
+            .join(BookingVO, cast(BookingVO.booking_name_id, Integer) == CropRequestVO.croprequest_crop_name) \
             .join(CropNameVO, CropRequestVO.croprequest_crop_name == CropNameVO.crop_name_id) \
             .join(CropVO, CropRequestVO.croprequest_crop_type == CropVO.crop_id) \
             .join(TimeSlotVO, BookingVO.booking_timeslot_id == TimeSlotVO.timeslot_id) \
             .join(PriceChartVO, CropNameVO.crop_name_id == PriceChartVO.price_chart_crop_id) \
             .all()
+        return croprequest_vo_list
+    
+
+    def user_croprequest_mail_details(self, croprequest_vo):
+        croprequest_vo_list = db.session.query(
+            CropRequestVO.croprequest_id,
+            CropRequestVO.croprequest_crop_quantity,
+            CropNameVO.crop_name,
+            CropRequestVO.croprequest_login_id
+        ).join(
+            CropNameVO,
+            CropRequestVO.croprequest_crop_name == CropNameVO.crop_name_id
+        ).filter(
+            CropRequestVO.croprequest_id == croprequest_vo.croprequest_id
+        ).first()
         return croprequest_vo_list

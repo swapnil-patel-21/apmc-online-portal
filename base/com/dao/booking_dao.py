@@ -2,6 +2,7 @@ from base import db
 from base.com.vo.booking_vo import BookingVO
 from base.com.vo.timeslot_vo import TimeSlotVO
 from base.com.vo.cropname_vo import CropNameVO
+from sqlalchemy import cast, String
 
 
 class BookingDAO:
@@ -18,7 +19,7 @@ class BookingDAO:
     def admin_view_booking_slot(self):
         croprequest_vo_list = db.session.query(BookingVO, TimeSlotVO, CropNameVO) \
             .join(TimeSlotVO, BookingVO.booking_timeslot_id == TimeSlotVO.timeslot_id) \
-            .join(CropNameVO, BookingVO.booking_name_id == CropNameVO.crop_name_id) \
+            .join(CropNameVO, BookingVO.booking_name_id == cast(CropNameVO.crop_name_id, String)) \
             .all()
         return croprequest_vo_list
 
@@ -26,7 +27,7 @@ class BookingDAO:
         croprequest_vo_list = db.session.query(BookingVO, TimeSlotVO, CropNameVO) \
             .filter_by(booking_login_id=booking_vo.booking_login_id) \
             .join(TimeSlotVO, BookingVO.booking_timeslot_id == TimeSlotVO.timeslot_id) \
-            .join(CropNameVO, BookingVO.booking_name_id == CropNameVO.crop_name_id) \
+            .join(CropNameVO, BookingVO.booking_name_id == cast(CropNameVO.crop_name_id, String)) \
             .all()
         return croprequest_vo_list
 

@@ -21,3 +21,8 @@ class UserDAO:
     # def update_crop(self, crop_vo):
     #     db.session.merge(crop_vo)
     #     db.session.commit()
+
+    def find_login_user_fname_lname(self, user_vo):
+        user_vo_list = UserVO.query.filter_by(user_login_id=user_vo.user_login_id).all()
+        login_user_fname_lname = f"{user_vo_list[0].user_firstname} {user_vo_list[0].user_lastname}"
+        return login_user_fname_lname

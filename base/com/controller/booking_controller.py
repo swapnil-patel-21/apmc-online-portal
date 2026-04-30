@@ -2,7 +2,6 @@ from flask import *
 import datetime
 import os
 import smtplib
-from dotenv import load_dotenv
 from base import app
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -162,6 +161,8 @@ def user_view_book_request():
     try:
         if admin_login_session() == 'user':
 
+            print(">>>>>>>>>>>>>>> Inside if")
+
             booking_dao = BookingDAO()
             booking_vo = BookingVO()
             login_vo = LoginVO()
@@ -221,7 +222,7 @@ def admin_approve_reject_book_request():
                 timeslot_vo.timeslot_capacity = update_timeslot_capacity
                 timeslot_dao.update_timeslot(timeslot_vo)
 
-            msg['Subject'] = "APMC Online Portal"
+            msg['Subject'] = "APMC Online Portal - Booking Update"
             msg.attach(MIMEText(msg_details, 'plain'))
 
             server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))

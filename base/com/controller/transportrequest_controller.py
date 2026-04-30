@@ -72,7 +72,7 @@ def user_ajax_vehicle():
             vehicle_vo = VehicleVO()
             vehicle_dao = VehicleDAO()
 
-            vehicle_type = request.args.get('vehicleType')
+            vehicle_type = (request.args.get('vehicleType').lower())
             print("subcategory_category_id>>>>>>>>>>>>>", vehicle_type)
             vehicle_vo.vehicle_type = vehicle_type
             vehicle_vo_list = vehicle_dao.view_ajax_vehicle(vehicle_vo)
@@ -193,7 +193,7 @@ def approve_reject_transportrequest():
                 msg_details = "Your Transport Request is Rejected"
                 transportrequest_vo.transportrequest_status = "Reject"
 
-            msg['Subject'] = "APMC Online Portal"
+            msg['Subject'] = "APMC Online Portal - Transport Request Update"
             msg.attach(MIMEText(msg_details, 'plain'))
 
             server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))

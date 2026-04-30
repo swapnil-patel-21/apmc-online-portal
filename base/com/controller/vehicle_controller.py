@@ -48,7 +48,7 @@ def admin_submit_vehicle():
             vehicle_vo.vehicle_image_name = vehicle_image_name
             vehicle_vo.vehicle_image_path = vehicle_image_path.replace("base", "..")
             vehicle_dao.insert_vehicle(vehicle_vo)
-            return redirect('admin/view_vehicle')
+            return redirect('/admin/view_vehicle')
         else:
             return admin_logout_session()
 
@@ -83,7 +83,7 @@ def admin_delete_vehicle():
             vehicle_vo_list = vehicle_dao.delete_vehicle(vehicle_id)
             file_path = vehicle_vo_list.vehicle_image_path.replace("..", "base") + vehicle_vo_list.vehicle_image_name
             os.remove(file_path)
-            return redirect('admin/view_vehicle')
+            return redirect('/admin/view_vehicle')
         else:
             return admin_logout_session()
     except Exception as ex:
