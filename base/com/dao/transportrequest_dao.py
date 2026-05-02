@@ -27,3 +27,15 @@ class TransportRequestDAO:
     def update_croprequest(self, croprequest_vo):
         db.session.merge(croprequest_vo)
         db.session.commit()
+
+    def user_transportrequest_mail_details(self, transportrequest_vo):
+        transportrequest_vo_list_mail_details = db.session.query(
+            TransportRequestVO.transportrequest_id,
+            TransportRequestVO.transportrequest_vehicle_type,
+            TransportRequestVO.transportrequest_vehicle_number,
+            TransportRequestVO.transportrequest_vehicle_charge,
+            TransportRequestVO.transportrequest_login_id
+        ).filter(
+            TransportRequestVO.transportrequest_id == transportrequest_vo.transportrequest_id
+        ).first()
+        return transportrequest_vo_list_mail_details
