@@ -8,7 +8,7 @@
 
 | Admin Dashboard | User Dashboard |
 |---|---|
-| ![Admin Dashboard](docs/admin_dashboard.png) | ![User Dashboard](docs/user_dashboard.png) |
+| ![Admin Dashboard](base/docs/admin_dashboard.png) | ![User Dashboard](base/docs/user_dashboard.png) |
 
 
 ---
