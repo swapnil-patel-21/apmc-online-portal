@@ -2,7 +2,7 @@ from base import db
 from base.com.vo.booking_vo import BookingVO
 from base.com.vo.timeslot_vo import TimeSlotVO
 from base.com.vo.cropname_vo import CropNameVO
-from sqlalchemy import cast, String
+from sqlalchemy import Integer, cast, String
 
 
 class BookingDAO:
@@ -34,4 +34,22 @@ class BookingDAO:
     def update_booking(self, booking_vo):
         db.session.merge(booking_vo)
         db.session.commit()
+
+    def user_bookingequest_mail_details(self, booking_vo):
+        bookingrequest_vo_list = db.session.query(
+            BookingVO.booking_id,
+            BookingVO.booking_date,
+            TimeSlotVO.timeslot_type,
+            CropNameVO.crop_name,
+            BookingVO.booking_login_id
+        ).join(
+            TimeSlotVO,
+            BookingVO.booking_timeslot_id == TimeSlotVO.timeslot_id
+        ).join(
+            CropNameVO,
+            cast(BookingVO.booking_name_id, Integer) == CropNameVO.crop_name_id
+        ).filter(
+            BookingVO.booking_id == booking_vo.booking_id
+        ).first()
+        return bookingrequest_vo_list
 

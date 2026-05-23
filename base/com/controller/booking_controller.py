@@ -10,10 +10,12 @@ from base.com.dao.booking_dao import BookingDAO
 from base.com.dao.login_dao import LoginDAO
 from base.com.dao.timeslot_dao import TimeSlotDAO
 from base.com.dao.croprequest_dao import CropRequestDAO
+from base.com.dao.user_dao import UserDAO
 from base.com.vo.booking_vo import BookingVO
 from base.com.vo.login_vo import LoginVO
 from base.com.vo.timeslot_vo import TimeSlotVO
 from base.com.vo.croprequest_vo import CropRequestVO
+from base.com.vo.user_vo import UserVO
 
 
 @app.route('/user/load_book_slot', methods=['GET'])
@@ -192,6 +194,8 @@ def admin_approve_reject_book_request():
             login_vo = LoginVO()
             timeslot_dao = TimeSlotDAO()
             timeslot_vo = TimeSlotVO()
+            user_dao = UserDAO()
+            user_vo = UserVO()
 
             booking_id = request.args.get("bookId")
             booking_vo.booking_id = booking_id
@@ -203,6 +207,10 @@ def admin_approve_reject_book_request():
                     login_username = login_dao.find_login_username(login_vo)
                     break
 
+            bookingrequest_vo_list = booking_dao.user_bookingequest_mail_details(booking_vo)
+            user_vo.user_login_id = bookingrequest_vo_list[4]
+            login_user_fname_lname = user_dao.find_login_user_fname_lname(user_vo)
+
             sender = os.getenv("EMAIL_USER")
             app_password = os.getenv("EMAIL_PASS")
             receiver = login_username
@@ -212,10 +220,40 @@ def admin_approve_reject_book_request():
 
             status = request.args.get("status")
             if status == "Approve":
-                msg_details = "Your Booking Request is Approved"
+                msg_details = f'''
+                    Dear {login_user_fname_lname},
+
+                    Your Booking Request has been approved ✔.
+
+                    Booking Details:
+                    Booking ID: {bookingrequest_vo_list[0]}
+                    Date: {bookingrequest_vo_list[1]}
+                    Timeslot: {bookingrequest_vo_list[2]}
+                    Crop Name: {bookingrequest_vo_list[3]}
+
+                    We look forward to serving you.
+
+                    Regards,
+                    APMC Online Portal Team
+                '''
                 booking_vo.booking_status = "Approve"
             elif status == "Reject":
-                msg_details = "Your Booking Request is Rejected"
+                msg_details = f'''
+                    Dear {login_user_fname_lname},
+
+                    We regret to inform you that your Booking Request has been rejected ✖.
+
+                    Booking Details:
+                    Booking ID: {bookingrequest_vo_list[0]}
+                    Date: {bookingrequest_vo_list[1]}
+                    Timeslot: {bookingrequest_vo_list[2]}
+                    Crop Name: {bookingrequest_vo_list[3]}
+
+                    Please make the necessary changes and submit again.
+
+                    Regards,
+                    APMC Online Portal Team
+                '''
                 booking_vo.booking_status = "Reject"
                 timeslot_vo_list = timeslot_dao.edit_timeslot(timeslot_vo)
                 update_timeslot_capacity = (timeslot_vo_list[0].timeslot_capacity) + 1

@@ -108,12 +108,38 @@ def admin_approve_reject_request():
             msg['Subject'] = "APMC Online Portal - Sell Request Update"
             msg.attach(MIMEText(msg_details, 'plain'))
 
-            server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))
-            server.starttls()
-            server.login(sender, app_password)
-            text = msg.as_string()
-            server.sendmail(sender, receiver, text)
-            server.quit()
+            # server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))
+            # server.starttls()
+            # server.login(sender, app_password)
+            # text = msg.as_string()
+            # server.sendmail(sender, receiver, text)
+            # server.quit()
+
+
+            #async call
+            def send_mail(sender, receiver, msg, app_password):
+
+                try:
+                    server = smtplib.SMTP(os.getenv("SMTP_SERVER"), os.getenv("SMTP_PORT"))
+                    server.starttls()
+                    server.login(sender, app_password)
+
+                    text = msg.as_string()
+                    server.sendmail(sender, receiver, text)
+
+                    server.quit()
+                    print("Mail sent successfully")
+
+                except Exception as e:
+                    print("Mail error:", e)
+
+            import threading
+
+            threading.Thread(
+                target=send_mail,
+                args=(sender, receiver, msg, app_password)
+            ).start()
+
 
             croprequest_dao.update_croprequest(croprequest_vo)
 

@@ -8,8 +8,10 @@ from flask import *
 from base import app
 from base.com.controller.login_controller import admin_login_session, admin_logout_session
 from base.com.dao.transportrequest_dao import TransportRequestDAO
+from base.com.dao.user_dao import UserDAO
 from base.com.vo.transportrequest_vo import TransportRequestVO
 from base.com.dao.vehicle_dao import VehicleDAO
+from base.com.vo.user_vo import UserVO
 from base.com.vo.vehicle_vo import VehicleVO
 from base.com.dao.login_dao import LoginDAO
 from base.com.vo.login_vo import LoginVO
@@ -165,6 +167,8 @@ def approve_reject_transportrequest():
             transportrequest_dao = TransportRequestDAO()
             login_dao = LoginDAO()
             login_vo = LoginVO()
+            user_dao = UserDAO()
+            user_vo = UserVO()
 
             transportrequest_id = request.args.get("transportrequestId")
             transportrequest_vo.transportrequest_id = transportrequest_id
@@ -177,7 +181,11 @@ def approve_reject_transportrequest():
                     login_username = login_dao.find_login_username(login_vo)
                     break
 
-            print(login_username)
+
+            transportrequest_vo_list_mail_details = transportrequest_dao.user_transportrequest_mail_details(transportrequest_vo)
+            user_vo.user_login_id = transportrequest_vo_list_mail_details[4]
+            login_user_fname_lname = user_dao.find_login_user_fname_lname(user_vo)
+
             sender = os.getenv("EMAIL_USER")
             app_password = os.getenv("EMAIL_PASS")
             receiver = login_username
@@ -187,10 +195,40 @@ def approve_reject_transportrequest():
 
             status = request.args.get("status")
             if status == "Approve":
-                msg_details = "Your Transport Request is Approved"
+                msg_details = f'''
+                    Dear {login_user_fname_lname},
+
+                    Your Transport Request has been approved ✔.
+
+                    Request Details:
+                    Request ID: {transportrequest_vo_list_mail_details[0]}
+                    Vehicle Type: {transportrequest_vo_list_mail_details[1]}
+                    Vehicle Number: {transportrequest_vo_list_mail_details[2]}
+                    Vehicle Charges: ₹ {transportrequest_vo_list_mail_details[3]}
+
+                    Please proceed accordingly through the portal.
+
+                    Regards,
+                    APMC Online Portal Team
+                '''
                 transportrequest_vo.transportrequest_status = "Approve"
             elif status == "Reject":
-                msg_details = "Your Transport Request is Rejected"
+                msg_details = f'''
+                    Dear {login_user_fname_lname},
+
+                    We regret to inform you that your Transport Request has been rejected ✖.
+
+                    Request Details:
+                    Request ID: {transportrequest_vo_list_mail_details[0]}
+                    Vehicle Type: {transportrequest_vo_list_mail_details[1]}
+                    Vehicle Number: {transportrequest_vo_list_mail_details[2]}
+                    Vehicle Charges: ₹ {transportrequest_vo_list_mail_details[3]}
+
+                    Please update the details and try again.
+
+                    Regards,
+                    APMC Online Portal Team
+                '''
                 transportrequest_vo.transportrequest_status = "Reject"
 
             msg['Subject'] = "APMC Online Portal - Transport Request Update"
